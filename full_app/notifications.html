@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --sidebar-width: 250px;
+            --topbar-height: 60px;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: #5a5c69;
+            background-color: #f8f9fc;
+            padding-top: var(--topbar-height);
+            padding-left: var(--sidebar-width);
+            transition: all 0.3s;
+        }
+
+        /* Top Navigation Bar */
+        .topbar {
+            height: var(--topbar-height);
+            background: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .topbar-search {
+            width: 25rem;
+        }
+
+        .topbar-divider {
+            width: 0;
+            border-right: 1px solid #e3e6f0;
+            height: calc(var(--topbar-height) - 2rem);
+            margin: auto 1rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 1001;
+            transition: all 0.3s;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .sidebar-brand {
+            height: var(--topbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+        }
+
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 1rem 0;
+        }
+
+        .sidebar-item {
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item i {
+            margin-right: 0.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        /* User Avatar */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .user-dropdown .dropdown-toggle::after {
+            display: none;
+        }
+
+        .sidebar-user {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .sidebar-user .user-avatar {
+            margin-right: 1rem;
+        }
+
+        .sidebar-user .user-info small {
+            color: rgba(255, 255, 255, 0.5);
+            display: block;
+            font-size: 0.7rem;
+        }
+
+        /* Cards and other elements */
+        .card {
+            border: none;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            border-left: 0.25rem solid var(--primary-color);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .application-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.35rem;
+            font-weight: 600;
+        }
+
+        .status-under-review {
+            background-color: #f6c23e;
+            color: white;
+        }
+
+        .status-accepted {
+            background-color: #1cc88a;
+            color: white;
+        }
+
+        .recommendation-card {
+            transition: transform 0.3s;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Toggled state */
+        body.toggled {
+            padding-left: 0;
+        }
+
+        body.toggled .sidebar {
+            left: calc(-1 * var(--sidebar-width));
+        }
+
+        body.toggled .topbar {
+            left: 0;
+        }
+
+        body.toggled .main-content {
+            margin-left: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding-left: 0;
+            }
+
+            .sidebar {
+                left: calc(-1 * var(--sidebar-width));
+            }
+
+            .topbar {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            body.toggled {
+                padding-left: var(--sidebar-width);
+            }
+
+            body.toggled .sidebar {
+                left: 0;
+            }
+
+            body.toggled .topbar {
+                left: var(--sidebar-width);
+            }
+
+            body.toggled .main-content {
+                margin-left: var(--sidebar-width);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a class="sidebar-brand" href="index.html">
+            <i class="fas fa-briefcase me-2"></i>TalentConnect
+        </a>
+        <div class="sidebar-divider"></div>
+        <a href="index.html" class="sidebar-item">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="applications.html" class="sidebar-item">
+            <i class="fas fa-fw fa-clipboard-list"></i>
+            <span>Applications</span>
+        </a>
+        <a href="projects.html" class="sidebar-item">
+            <i class="fas fa-fw fa-project-diagram"></i>
+            <span>Projects</span>
+        </a>
+        <a href="notifications.html" class="sidebar-item active">
+            <i class="fas fa-fw fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="settings.html" class="sidebar-item">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Settings</span>
+        </a>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-user">
+            <div class="user-avatar">AJ</div>
+            <div class="user-info">
+                <div>Alex Johnson</div>
+                <small>Student</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="topbar navbar navbar-expand navbar-light bg-white shadow">
+        <div class="container-fluid">
+            <!-- Sidebar toggle button -->
+            <button id="sidebarToggle" class="btn btn-link d-md-none rounded-circle me-3">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Search bar -->
+            <form class="d-none d-sm-inline-block form-inline me-auto ms-md-3 my-md-0 mw-100 topbar-search">
+                <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                        aria-label="Search">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ms-auto">
+                <!-- Nav Item - Alerts -->
+                <li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <i class="fas fa-bell fa-fw"></i>
+                        <!-- Counter - Alerts -->
+                        <span class="badge bg-danger badge-counter">3+</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Messages -->
+                <li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <i class="fas fa-envelope fa-fw"></i>
+                        <!-- Counter - Messages -->
+                        <span class="badge bg-danger badge-counter">7</span>
+                    </a>
+                </li>
+
+                <div class="topbar-divider d-none d-sm-block"></div>
+
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow user-dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar">AJ</div>
+                            <span class="d-none d-lg-inline">Alex Johnson</span>
+                        </div>
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-end shadow">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                            Profile
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+                            Settings
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>
+                            Activity Log
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Notifications</h1>
+            </div>
+
+            <!-- Content Row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Recent Notifications</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">New Message</h5>
+                                        <small>3 days ago</small>
+                                    </div>
+                                    <p class="mb-1">You have a new message from John Doe.</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">Application Update</h5>
+                                        <small>5 days ago</small>
+                                    </div>
+                                    <p class="mb-1">Your application for Software Engineer Intern at Google has been updated.</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">Project Deadline</h5>
+                                        <small>1 week ago</small>
+                                    </div>
+                                    <p class="mb-1">Project Alpha is due in 3 days.</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sidebar toggle functionality
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            sidebarToggle.addEventListener('click', function () {
+                document.body.classList.toggle('toggled');
+            });
+
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Mobile sidebar behavior
+            function handleMobileSidebar() {
+                if (window.innerWidth < 768) {
+                    document.body.classList.add('toggled');
+                } else {
+                    document.body.classList.remove('toggled');
+                }
+            }
+
+            // Run on load and resize
+            handleMobileSidebar();
+            window.addEventListener('resize', handleMobileSidebar);
+        });
+    </script>
+</body>
+
+</html>
