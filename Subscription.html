@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans & Listing Boost</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+        
+        .header h1 {
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .toggle-label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-switch {
+            transform: scale(1.3);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .save-badge {
+            background: #ffd166;
+            color: #8a6800;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-bottom: 30px;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.2);
+        }
+        
+        .popular-plan {
+            border-color: var(--primary);
+            position: relative;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border: 0;
+        }
+        
+        .free-header {
+            background: linear-gradient(135deg, #6c757d, #495057);
+        }
+        
+        .premium-header {
+            background: linear-gradient(135deg, #ff9a00, #ff5e00);
+        }
+        
+        .price-tag {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 15px 0;
+        }
+        
+        .plan-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+        }
+        
+        .features-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .features-list li i {
+            color: var(--success);
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        
+        .btn-plan {
+            padding: 12px 30px;
+            font-weight: 700;
+            border-radius: 8px;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-free {
+            background: #e9ecef;
+            color: var(--dark);
+        }
+        
+        .btn-free:hover {
+            background: #dee2e6;
+        }
+        
+        .btn-standard {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-standard:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-premium {
+            background: linear-gradient(45deg, #ff9a00, #ff5e00);
+            color: white;
+        }
+        
+        .btn-premium:hover {
+            background: linear-gradient(45deg, #ff8a00, #ff4d00);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 154, 0, 0.4);
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin: 40px 0;
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 700;
+            padding: 20px;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+        }
+        
+        .table tbody tr:first-child td {
+            border-top: 0;
+        }
+        
+        .table td {
+            padding: 15px 20px;
+            vertical-align: middle;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+        }
+        
+        .free-col {
+            background: rgba(108, 117, 125, 0.05);
+        }
+        
+        .standard-col {
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .premium-col {
+            background: rgba(255, 154, 0, 0.05);
+        }
+        
+        .check-icon {
+            color: var(--success);
+            font-size: 1.3rem;
+        }
+        
+        .close-icon {
+            color: #dc3545;
+            font-size: 1.3rem;
+        }
+        
+        .boost-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            margin: 40px 0;
+        }
+        
+        .section-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .premium-toggle {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+        }
+        
+        .form-check {
+            margin-right: 20px;
+            transform: scale(1.5);
+        }
+        
+        .premium-badge {
+            background: linear-gradient(45deg, #ff9a00, #ff5e00);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .benefit-item i {
+            color: var(--success);
+            font-size: 1.5rem;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+        
+        .price-box {
+            background: #e8f4fc;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .price-label {
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .boost-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .additional-fee {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        .preview-box {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 1px dashed #d0d9ff;
+        }
+        
+        .preview-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+        
+        .total-price {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+        
+        .guarantee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .guarantee-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .guarantee-item i {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+        
+        .custom-solution {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .custom-solution h3 {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .custom-solution p {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .btn-custom {
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 12px 30px;
+            border-radius: 8px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+        
+        .benefit-icons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .benefit-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 100px;
+            text-align: center;
+        }
+        
+        .benefit-icon i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin: 40px 0;
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .filter-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            background: white;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 14px;
+            color: var(--gray);
+        }
+        
+        .search-box input {
+            padding-left: 45px;
+        }
+        
+        @media (max-width: 992px) {
+            .plan-card {
+                margin-bottom: 30px;
+            }
+            
+            .popular-plan {
+                transform: scale(1.02);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .billing-toggle {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .plan-card {
+                max-width: 400px;
+                margin: 0 auto 30px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn-custom {
+                margin: 10px 0;
+                width: 100%;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pricing Section -->
+        <div class="header">
+            <h1>Choose Your Plan</h1>
+            <p>Select the perfect plan for your posting needs</p>
+            
+            <div class="billing-toggle">
+                <span class="toggle-label">Monthly</span>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="billingToggle">
+                </div>
+                <span class="toggle-label">Annual</span>
+                <span class="save-badge">Save 17%</span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Free Plan -->
+            <div class="col-lg-4">
+                <div class="plan-card">
+                    <div class="card-header free-header">
+                        <div class="plan-name">Free Plan</div>
+                        <div class="price-tag">$0<span class="period">/month</span></div>
+                        <p>Perfect for getting started with basic posting needs</p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> Up to 3 active posts</li>
+                            <li><i class="fas fa-check-circle"></i> Basic post management</li>
+                            <li><i class="fas fa-check-circle"></i> Standard support</li>
+                            <li><i class="fas fa-check-circle"></i> Community access</li>
+                        </ul>
+                        <button class="btn btn-free btn-plan">Get Started Free</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Standard Plan -->
+            <div class="col-lg-4">
+                <div class="plan-card popular-plan">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="card-header">
+                        <div class="plan-name">Standard Plan</div>
+                        <div class="price-tag">$29<span class="period">/month</span></div>
+                        <p>Ideal for growing businesses with regular posting needs</p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> 10 active posts/month</li>
+                            <li><i class="fas fa-check-circle"></i> Basic analytics dashboard</li>
+                            <li><i class="fas fa-check-circle"></i> Email support</li>
+                            <li><i class="fas fa-check-circle"></i> Post scheduling</li>
+                            <li><i class="fas fa-check-circle"></i> Basic branding options</li>
+                        </ul>
+                        <button class="btn btn-standard btn-plan">Subscribe Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Premium Plan -->
+            <div class="col-lg-4">
+                <div class="plan-card">
+                    <div class="card-header premium-header">
+                        <div class="plan-name">Premium Plan</div>
+                        <div class="price-tag">$79<span class="period">/month</span></div>
+                        <p>Perfect for enterprises with unlimited posting requirements</p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> Unlimited active posts</li>
+                            <li><i class="fas fa-check-circle"></i> Advanced analytics & insights</li>
+                            <li><i class="fas fa-check-circle"></i> Priority support</li>
+                            <li><i class="fas fa-check-circle"></i> Advanced scheduling</li>
+                            <li><i class="fas fa-check-circle"></i> Full branding customization</li>
+                            <li><i class="fas fa-check-circle"></i> API access</li>
+                            <li><i class="fas fa-check-circle"></i> Team collaboration</li>
+                        </ul>
+                        <button class="btn btn-premium btn-plan">Subscribe Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feature Comparison Table -->
+        <div class="comparison-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>Free</th>
+                        <th>Standard</th>
+                        <th>Premium</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name">Active Posts</td>
+                        <td class="free-col">3</td>
+                        <td class="standard-col">10/month</td>
+                        <td class="premium-col">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Analytics Dashboard</td>
+                        <td class="free-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="standard-col"><i class="fas fa-check check-icon"></i></td>
+                        <td class="premium-col"><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Advanced Analytics</td>
+                        <td class="free-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="standard-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="premium-col"><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Post Scheduling</td>
+                        <td class="free-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="standard-col"><i class="fas fa-check check-icon"></i></td>
+                        <td class="premium-col"><i class="fas fa-check check-icon"> Advanced</i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Branding Options</td>
+                        <td class="free-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="standard-col">Basic</td>
+                        <td class="premium-col">Full Custom</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">API Access</td>
+                        <td class="free-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="standard-col"><i class="fas fa-times close-icon"></i></td>
+                        <td class="premium-col"><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Custom Solution Section -->
+        <div class="custom-solution">
+            <h3>Need a Custom Solution?</h3>
+            <p>Contact sales for custom enterprise-level pricing and features tailored to your business requirements.</p>
+            <div class="d-flex justify-content-center flex-wrap">
+                <button class="btn btn-custom">Contact Sales</button>
+                <button class="btn btn-custom">Schedule Demo</button>
+            </div>
+        </div>
+        
+        <!-- Benefit Icons -->
+        <div class="benefit-icons">
+            <div class="benefit-icon">
+                <i class="fas fa-calendar-check"></i>
+                <span>30-day money-back guarantee</span>
+            </div>
+            <div class="benefit-icon">
+                <i class="fas fa-ban"></i>
+                <span>Cancel anytime</span>
+            </div>
+            <div class="benefit-icon">
+                <i class="fas fa-cog"></i>
+                <span>No setup fees</span>
+            </div>
+            <div class="benefit-icon">
+                <i class="fas fa-lock"></i>
+                <span>Secure payments</span>
+            </div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3 class="section-title">Filter Listings</h3>
+            <div class="filter-row">
+                <div class="filter-group search-box">
+                    <label class="filter-label">Search</label>
+                    <div class="position-relative">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control filter-control" placeholder="Search listings...">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Categories</label>
+                    <select class="form-select filter-control">
+                        <option selected>Select Category</option>
+                        <option>Technology</option>
+                        <option>Design & Creative</option>
+                        <option>Sales & Marketing</option>
+                        <option>Writing & Translation</option>
+                        <option>Admin Support</option>
+                        <option>Finance & Accounting</option>
+                        <option>Engineering & Architecture</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Levels</label>
+                    <select class="form-select filter-control">
+                        <option selected>Select Level</option>
+                        <option>Entry Level</option>
+                        <option>Intermediate</option>
+                        <option>Expert</option>
+                        <option>Director</option>
+                        <option>Executive</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary">Apply Filters</button>
+        </div>
+        
+        <!-- Boost Section -->
+        <div class="boost-section">
+            <h2 class="section-title">Boost Your Opportunity</h2>
+            <p class="lead">Make your listing stand out and reach more qualified candidates</p>
+            
+            <div class="premium-toggle">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="premiumToggle">
+                </div>
+                <div>
+                    <label class="form-check-label h5" for="premiumToggle">
+                        Make this a Premium Listing <span class="premium-badge">FEATURED</span>
+                    </label>
+                    <p class="mt-2">
+                        Premium listings appear at the top of search results and are featured to more students. 
+                        Get 3x more visibility and higher quality applications.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <i class="fas fa-medal"></i>
+                    <div>Top placement in search</div>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-certificate"></i>
+                    <div>Featured badge</div>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-eye"></i>
+                    <div>3x more visibility</div>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>Priority email notifications</div>
+                </div>
+            </div>
+            
+            <div class="price-box">
+                <div class="price-label">Premium Listing Cost</div>
+                <div class="boost-price">LKR 1,500</div>
+                <div class="additional-fee">One-time fee per listing + standard listing fee</div>
+            </div>
+            
+            <h4>Preview Premium Listing</h4>
+            <div class="preview-box">
+                <div class="preview-item">
+                    <span>Standard Listing</span>
+                    <span>Free</span>
+                </div>
+                <div class="preview-item">
+                    <span>Premium Upgrade</span>
+                    <span>+ LKR 1,500</span>
+                </div>
+                <hr>
+                <div class="preview-item">
+                    <strong>Total</strong>
+                    <strong class="total-price">LKR 1,500</strong>
+                </div>
+            </div>
+            
+            <div class="guarantee-grid">
+                <div class="guarantee-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>Secure payment processing</div>
+                </div>
+                <div class="guarantee-item">
+                    <i class="fas fa-undo"></i>
+                    <div>30-day money-back guarantee</div>
+                </div>
+                <div class="guarantee-item">
+                    <i class="fas fa-bolt"></i>
+                    <div>Instant listing activation</div>
+                </div>
+                <div class="guarantee-item">
+                    <i class="fas fa-headset"></i>
+                    <div>24/7 customer support</div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between btn-container">
+                <button class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Edit
+                </button>
+                <button class="btn btn-primary btn-lg">
+                    Publish Listing <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2023 JobConnect. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Billing toggle functionality
+        document.getElementById('billingToggle').addEventListener('change', function() {
+            const priceElements = document.querySelectorAll('.price-tag');
+            const periodElements = document.querySelectorAll('.period');
+            const saveBadge = document.querySelector('.save-badge');
+            
+            if(this.checked) {
+                // Annual pricing
+                priceElements[0].innerHTML = '$0<span class="period">/year</span>';
+                priceElements[1].innerHTML = '$290<span class="period">/year</span>';
+                priceElements[2].innerHTML = '$790<span class="period">/year</span>';
+                saveBadge.style.display = 'inline-block';
+            } else {
+                // Monthly pricing
+                priceElements[0].innerHTML = '$0<span class="period">/month</span>';
+                priceElements[1].innerHTML = '$29<span class="period">/month</span>';
+                priceElements[2].innerHTML = '$79<span class="period">/month</span>';
+                saveBadge.style.display = 'inline-block';
+            }
+        });
+        
+        // Premium toggle functionality
+        document.getElementById('premiumToggle').addEventListener('change', function() {
+            const totalPrice = document.querySelector('.total-price');
+            const boostSection = document.querySelector('.boost-section');
+            
+            if(this.checked) {
+                totalPrice.textContent = 'LKR 1,500';
+                boostSection.classList.add('feature-highlight');
+            } else {
+                totalPrice.textContent = 'Free';
+                boostSection.classList.remove('feature-highlight');
+            }
+        });
+    </script>
+</body>
+</html>
