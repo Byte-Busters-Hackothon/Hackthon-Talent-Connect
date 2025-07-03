@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentConnect - Skills</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #ff4081;
+            --accent-color: #00bcd4;
+            --light-bg: #f8f9fa;
+            --dark-text: #212529;
+            --light-text: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fb, #eef2f7);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .skills-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+            padding: 30px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .app-header::after {
+            content: "";
+            position: absolute;
+            bottom: -70px;
+            left: -50px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .app-header h1 {
+            font-weight: 800;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .app-header p {
+            opacity: 0.9;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+            font-size: 1.1rem;
+        }
+        
+        .user-profile {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            z-index: 3;
+        }
+        
+        .ai-powered-tag {
+            background: linear-gradient(135deg, #ff6b6b, #ff4081);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .search-section {
+            padding: 30px 40px;
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .search-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-input input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
+        }
+        
+        .search-input i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            font-size: 1.2rem;
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filter-card {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        
+        .custom-dropdown select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            background-color: white;
+            font-size: 1rem;
+            appearance: none;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-dropdown select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
+        }
+        
+        .custom-dropdown::after {
+            content: "\f107";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--light-text);
+        }
+        
+        .resources-section {
+            padding: 30px 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .section-title {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border: none;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+        }
+        
+        .resource-type {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+        
+        .resource-title {
+            font-weight: 800;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .stars {
+            color: #ffc107;
+        }
+        
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-description {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .skill-badge {
+            background-color: rgba(63, 81, 181, 0.1);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .duration {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .access-btn {
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .access-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(63, 81, 181, 0.3);
+        }
+        
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.08);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .nav-item {
+            text-align: center;
+            color: var(--light-text);
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+            background: rgba(63, 81, 181, 0.1);
+        }
+        
+        .nav-item i {
+            display: block;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .ai-recommended {
+            position: relative;
+        }
+        
+        .ai-recommended::before {
+            content: "AI Recommended";
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4081);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .resources-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .app-header, .search-section, .resources-section {
+                padding: 25px;
+            }
+            
+            .app-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .user-profile {
+                position: static;
+                margin-top: 15px;
+                display: inline-block;
+            }
+            
+            .mobile-nav {
+                display: flex;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
+            .skills-container {
+                border-radius: 15px;
+            }
+            
+            .app-header {
+                padding: 20px;
+            }
+            
+            .search-section, .resources-section {
+                padding: 20px;
+            }
+            
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .filter-container {
+                flex-direction: column;
+            }
+            
+            .resource-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="skills-container">
+        <div class="app-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>Skill Resources</h1>
+                    <p>Explore resources to enhance your skills</p>
+                    <div class="ai-powered-tag">
+                        <i class="fas fa-robot"></i> AI Powered Recommendations
+                    </div>
+                </div>
+                <div class="user-profile">
+                    <span class="badge bg-light text-dark p-3 rounded-pill">
+                        <i class="fas fa-user me-2"></i>Aj
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-section">
+            <h3 class="search-title">
+                <i class="fas fa-search"></i> Search resources by skill or topic...
+            </h3>
+            
+            <div class="search-container">
+                <div class="search-input">
+                    <input type="text" id="searchInput" placeholder="Enter skill, topic, or resource name...">
+                    <i class="fas fa-search"></i>
+                </div>
+                
+                <div class="filter-container">
+                    <div class="filter-card">
+                        <div class="filter-label">Categories</div>
+                        <div class="custom-dropdown">
+                            <select id="categoryFilter">
+                                <option value="all">All Categories</option>
+                                <option value="Course">Course</option>
+                                <option value="Webinar">Webinar</option>
+                                <option value="Discussion">Discussion</option>
+                                <option value="Mentoring">Mentoring</option>
+                                <option value="Workshop">Workshop</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-card">
+                        <div class="filter-label">Levels</div>
+                        <div class="custom-dropdown">
+                            <select id="levelFilter">
+                                <option value="all">All Levels</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-card">
+                        <div class="filter-label">Skills</div>
+                        <div class="custom-dropdown">
+                            <select id="skillFilter">
+                                <option value="all">All Skills</option>
+                                <option value="Python">Python</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Research">Research</option>
+                                <option value="Career">Career</option>
+                                <option value="Leadership">Leadership</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="resources-section">
+            <div class="section-header">
+                <h2 class="section-title">Recommended for You</h2>
+            </div>
+            
+            <div class="resources-grid">
+                <!-- Data Analysis -->
+                <div class="resource-card ai-recommended" data-category="Course" data-level="Beginner" data-skills="Python,Data Science,Statistics">
+                    <div class="card-header">
+                        <span class="resource-type">Course</span>
+                        <h3 class="resource-title">Introduction to Data Analysis</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span>4.8</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Learn the fundamentals of data analysis using Python and statistical methods. 
+                            Perfect for beginners looking to start a career in data science.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Python</span>
+                            <span class="skill-badge">Data Science</span>
+                            <span class="skill-badge">Statistics</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 4 weeks
+                            </div>
+                            <button class="access-btn">Continue Course</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Machine Learning -->
+                <div class="resource-card ai-recommended" data-category="Course" data-level="Advanced" data-skills="Python,Machine Learning,AI">
+                    <div class="card-header">
+                        <span class="resource-type">Course</span>
+                        <h3 class="resource-title">Advanced Machine Learning</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.9</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Deep dive into machine learning algorithms and their practical implementation 
+                            in real-world scenarios. Master advanced concepts with hands-on projects.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Machine Learning</span>
+                            <span class="skill-badge">Python</span>
+                            <span class="skill-badge">AI</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 8 weeks
+                            </div>
+                            <button class="access-btn">Continue Course</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Research Workshop -->
+                <div class="resource-card ai-recommended" data-category="Webinar" data-level="Intermediate" data-skills="Research,Methodology,Academic">
+                    <div class="card-header">
+                        <span class="resource-type">Webinar</span>
+                        <h3 class="resource-title">Research Methodology Workshop</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span>4.6</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Workshop covering research design, data collection methods, and techniques to 
+                            improve research quality. Essential for academic success.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Research</span>
+                            <span class="skill-badge">Methodology</span>
+                            <span class="skill-badge">Academic</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 2 hours
+                            </div>
+                            <button class="access-btn">Register</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Career Discussion -->
+                <div class="resource-card ai-recommended" data-category="Discussion" data-level="Beginner" data-skills="Career,Networking,Professional">
+                    <div class="card-header">
+                        <span class="resource-type">Discussion</span>
+                        <h3 class="resource-title">Peer Discussion: Career Planning</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.4</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Join fellow students in discussing career paths, networking strategies, and 
+                            professional development. Share experiences and get advice.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Career</span>
+                            <span class="skill-badge">Networking</span>
+                            <span class="skill-badge">Professional</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> Ongoing
+                            </div>
+                            <button class="access-btn">Join Discussion</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h2 class="section-title">All Resources</h2>
+            </div>
+            
+            <div class="resources-grid">
+                <!-- Data Analysis -->
+                <div class="resource-card" data-category="Course" data-level="Beginner" data-skills="Python,Data Science,Statistics">
+                    <div class="card-header">
+                        <span class="resource-type">Course</span>
+                        <h3 class="resource-title">Introduction to Data Analysis</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span>4.8</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Learn the fundamentals of data analysis using Python and statistical methods. 
+                            Perfect for beginners looking to start a career in data science.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Python</span>
+                            <span class="skill-badge">Data Science</span>
+                            <span class="skill-badge">Statistics</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 4 weeks
+                            </div>
+                            <button class="access-btn">Continue Course</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Machine Learning -->
+                <div class="resource-card" data-category="Course" data-level="Advanced" data-skills="Python,Machine Learning,AI">
+                    <div class="card-header">
+                        <span class="resource-type">Course</span>
+                        <h3 class="resource-title">Advanced Machine Learning</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.9</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Deep dive into machine learning algorithms and their practical implementation 
+                            in real-world scenarios. Master advanced concepts with hands-on projects.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Machine Learning</span>
+                            <span class="skill-badge">Python</span>
+                            <span class="skill-badge">AI</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 8 weeks
+                            </div>
+                            <button class="access-btn">Continue Course</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Research Workshop -->
+                <div class="resource-card" data-category="Webinar" data-level="Intermediate" data-skills="Research,Methodology,Academic">
+                    <div class="card-header">
+                        <span class="resource-type">Webinar</span>
+                        <h3 class="resource-title">Research Methodology Workshop</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span>4.6</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Workshop covering research design, data collection methods, and techniques to 
+                            improve research quality. Essential for academic success.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Research</span>
+                            <span class="skill-badge">Methodology</span>
+                            <span class="skill-badge">Academic</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 2 hours
+                            </div>
+                            <button class="access-btn">Register</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Career Discussion -->
+                <div class="resource-card" data-category="Discussion" data-level="Beginner" data-skills="Career,Networking,Professional">
+                    <div class="card-header">
+                        <span class="resource-type">Discussion</span>
+                        <h3 class="resource-title">Peer Discussion: Career Planning</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.4</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Join fellow students in discussing career paths, networking strategies, and 
+                            professional development. Share experiences and get advice.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Career</span>
+                            <span class="skill-badge">Networking</span>
+                            <span class="skill-badge">Professional</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> Ongoing
+                            </div>
+                            <button class="access-btn">Join Discussion</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mentoring -->
+                <div class="resource-card" data-category="Mentoring" data-level="Intermediate" data-skills="Mentoring,Professional,Guidance">
+                    <div class="card-header">
+                        <span class="resource-type">Mentoring</span>
+                        <h3 class="resource-title">One-on-One Mentoring</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.9</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Personalized mentoring sessions with industry professionals and faculty. 
+                            Get tailored advice for your career and academic development.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Mentoring</span>
+                            <span class="skill-badge">Professional</span>
+                            <span class="skill-badge">Guidance</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 1 hour
+                            </div>
+                            <button class="access-btn">Book Session</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Leadership -->
+                <div class="resource-card" data-category="Course" data-level="Intermediate" data-skills="Leadership,Management,Soft Skills">
+                    <div class="card-header">
+                        <span class="resource-type">Course</span>
+                        <h3 class="resource-title">Leadership Skills Development</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span>4.7</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="resource-description">
+                            Develop essential leadership skills through interactive modules and real-world 
+                            case studies. Enhance your ability to lead teams effectively.
+                        </p>
+                        <div class="skills-container">
+                            <span class="skill-badge">Leadership</span>
+                            <span class="skill-badge">Management</span>
+                            <span class="skill-badge">Soft Skills</span>
+                        </div>
+                        <div class="resource-meta">
+                            <div class="duration">
+                                <i class="fas fa-clock"></i> 6 weeks
+                            </div>
+                            <button class="access-btn">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            Dashboard
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-briefcase"></i>
+            Opportunities
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-file-alt"></i>
+            Applications
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-project-diagram"></i>
+            Projects
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-lightbulb"></i>
+            Skills
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Filter functionality
+        function filterResources() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const level = document.getElementById('levelFilter').value;
+            const skill = document.getElementById('skillFilter').value;
+            const cards = document.querySelectorAll('.resource-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.resource-title').textContent.toLowerCase();
+                const description = card.querySelector('.resource-description').textContent.toLowerCase();
+                const cardCategory = card.getAttribute('data-category');
+                const cardLevel = card.getAttribute('data-level');
+                const cardSkills = card.getAttribute('data-skills').toLowerCase();
+                
+                const searchMatch = search === '' || 
+                                   title.includes(search) || 
+                                   description.includes(search);
+                const categoryMatch = category === 'all' || cardCategory === category;
+                const levelMatch = level === 'all' || cardLevel === level;
+                const skillMatch = skill === 'all' || cardSkills.includes(skill.toLowerCase());
+                
+                if (searchMatch && categoryMatch && levelMatch && skillMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Set up event listeners for filters
+        document.getElementById('searchInput').addEventListener('input', filterResources);
+        document.getElementById('categoryFilter').addEventListener('change', filterResources);
+        document.getElementById('levelFilter').addEventListener('change', filterResources);
+        document.getElementById('skillFilter').addEventListener('change', filterResources);
+        
+        // Initialize filtering
+        filterResources();
+        
+        // Access button animation
+        document.querySelectorAll('.access-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Accessing...';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    alert('Resource accessed successfully!');
+                }, 1000);
+            });
+        });
+        
+        // AI powered tag animation
+        const aiTags = document.querySelectorAll('.ai-powered-tag');
+        setInterval(() => {
+            aiTags.forEach(tag => {
+                tag.style.background = `linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)})`;
+            });
+        }, 3000);
+    </script>
+</body>
+</html>
