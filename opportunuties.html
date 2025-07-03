@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentConnect - Opportunities</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #ff4081;
+            --accent-color: #00bcd4;
+            --light-bg: #f8f9fa;
+            --dark-text: #212529;
+            --light-text: #6c757d;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .opportunities-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .app-header::after {
+            content: "";
+            position: absolute;
+            bottom: -70px;
+            left: -50px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .app-header h1 {
+            font-weight: 800;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.5px;
+        }
+        
+        .app-header p {
+            opacity: 0.9;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .user-profile {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 3;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        
+        .filter-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        
+        .custom-dropdown select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            background-color: white;
+            font-size: 1rem;
+            appearance: none;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-dropdown select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
+        }
+        
+        .custom-dropdown::after {
+            content: "\f107";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--light-text);
+        }
+        
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+        }
+        
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .opportunity-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .opportunity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .card-title {
+            font-weight: 800;
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+        }
+        
+        .department {
+            font-weight: 500;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 15px;
+            border-radius: 50px;
+            text-transform: uppercase;
+        }
+        
+        .status-open {
+            background-color: white;
+            color: var(--success-color);
+        }
+        
+        .status-closing {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-text {
+            color: var(--light-text);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .skills-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .skill-badge {
+            background-color: rgba(63, 81, 181, 0.1);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .apply-btn {
+            background: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 700;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(63, 81, 181, 0.4);
+        }
+        
+        .apply-btn:active {
+            transform: translateY(0);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 20px 20px;
+            color: var(--light-text);
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .footer p {
+            margin-bottom: 0;
+        }
+        
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.08);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .nav-item {
+            text-align: center;
+            color: var(--light-text);
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-color);
+            background: rgba(63, 81, 181, 0.1);
+        }
+        
+        .nav-item i {
+            display: block;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .opportunities-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 20px;
+            }
+            
+            .app-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+            }
+            
+            .filter-card {
+                min-width: 100%;
+            }
+            
+            .opportunities-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
+            .opportunities-container {
+                padding: 15px;
+            }
+            
+            .app-header {
+                padding: 20px 15px;
+            }
+            
+            .filter-section {
+                padding: 20px;
+            }
+            
+            .card-header, .card-body {
+                padding: 20px;
+            }
+            
+            .user-profile {
+                position: static;
+                margin-top: 15px;
+                text-align: right;
+            }
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            background: var(--light-bg);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .no-results h3 {
+            color: var(--dark-text);
+            margin-bottom: 15px;
+        }
+        
+        .no-results p {
+            color: var(--light-text);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="opportunities-container">
+        <div class="app-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>TalentConnect</h1>
+                    <p>Find your next opportunity with us</p>
+                </div>
+                <div class="user-profile">
+                    <span class="badge bg-light text-dark p-3 rounded-pill">
+                        <i class="fas fa-user me-2"></i>Aj
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h3 class="filter-title">
+                <i class="fas fa-filter"></i> Filter Opportunities
+            </h3>
+            
+            <div class="filter-group">
+                <div class="filter-card">
+                    <div class="filter-label">Search Opportunities</div>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search by title or skill...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <div class="filter-card">
+                    <div class="filter-label">Departments</div>
+                    <div class="custom-dropdown">
+                        <select id="departmentFilter">
+                            <option value="all">All Departments</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Business">Business</option>
+                            <option value="IT Services">IT Services</option>
+                            <option value="Chemistry">Chemistry</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-card">
+                    <div class="filter-label">Opportunity Type</div>
+                    <div class="custom-dropdown">
+                        <select id="typeFilter">
+                            <option value="all">All Types</option>
+                            <option value="Open">Open</option>
+                            <option value="Closing Soon">Closing Soon</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="opportunities-grid" id="opportunitiesGrid">
+            <!-- AI Research Assistant -->
+            <div class="opportunity-card" data-department="Computer Science" data-type="Open" data-title="AI Research Assistant" data-skills="python,machine learning,tensorflow">
+                <div class="card-header">
+                    <h3 class="card-title">AI Research Assistant</h3>
+                    <div class="department">Computer Science</div>
+                    <span class="status-badge status-open">Open</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Join our AI research team to work on machine learning projects and natural language processing. Collaborate with leading researchers in the field.</p>
+                    <div class="skills-label">Required Skills:</div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Python</span>
+                        <span class="skill-badge">Machine Learning</span>
+                        <span class="skill-badge">TensorFlow</span>
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+            
+            <!-- Marketing Intern -->
+            <div class="opportunity-card" data-department="Business" data-type="Open" data-title="Marketing Intern" data-skills="marketing analytics,social media">
+                <div class="card-header">
+                    <h3 class="card-title">Marketing Intern</h3>
+                    <div class="department">Business</div>
+                    <span class="status-badge status-open">Open</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Support marketing campaigns and analyze customer data for insights. Gain hands-on experience in digital marketing strategies.</p>
+                    <div class="skills-label">Required Skills:</div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Marketing Analytics</span>
+                        <span class="skill-badge">Social Media</span>
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+            
+            <!-- Web Developer -->
+            <div class="opportunity-card" data-department="IT Services" data-type="Open" data-title="Web Developer" data-skills="javascript,react,node.js">
+                <div class="card-header">
+                    <h3 class="card-title">Web Developer</h3>
+                    <div class="department">IT Services</div>
+                    <span class="status-badge status-open">Open</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Develop and maintain university websites and web applications. Work with modern frameworks and technologies.</p>
+                    <div class="skills-label">Required Skills:</div>
+                    <div class="skills-container">
+                        <span class="skill-badge">JavaScript</span>
+                        <span class="skill-badge">React</span>
+                        <span class="skill-badge">Node.js</span>
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+            
+            <!-- Lab Assistant -->
+            <div class="opportunity-card" data-department="Chemistry" data-type="Closing Soon" data-title="Lab Assistant" data-skills="lab skills,research,safety protocols">
+                <div class="card-header">
+                    <h3 class="card-title">Lab Assistant</h3>
+                    <div class="department">Chemistry</div>
+                    <span class="status-badge status-closing">Closing Soon</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Assist with laboratory experiments and maintain equipment. Opportunity to work with cutting-edge research equipment.</p>
+                    <div class="skills-label">Required Skills:</div>
+                    <div class="skills-container">
+                        <span class="skill-badge">Lab Skills</span>
+                        <span class="skill-badge">Research</span>
+                        <span class="skill-badge">Safety Protocols</span>
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+            
+            <!-- Data Analyst -->
+            <div class="opportunity-card" data-department="Computer Science" data-type="Open" data-title="Data Analyst" data-skills="sql,python,data visualization">
+                <div class="card-header">
+                    <h3 class="card-title">Data Analyst</h3>
+                    <div class="department">Computer Science</div>
+                    <span class="status-badge status-open">Open</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Analyze large datasets to extract meaningful insights. Create visualizations and reports for university research projects.</p>
+                    <div class="skills-label">Required Skills:</div>
+                    <div class="skills-container">
+                        <span class="skill-badge">SQL</span>
+                        <span class="skill-badge">Python</span>
+                        <span class="skill-badge">Data Visualization</span>
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+            
+            <!-- UX Designer -->
+            <div class="opportunity-card" data-department="IT Services" data-type="Closing Soon" data-title="UX Designer" data-skills="ui/ux,figma,user research">
+                <div class="card-header">
+                    <h3 class="card-title">UX Designer</h3>
+                    <div class="department">IT Services</div>
+                    <span class="status-badge status-closing">Closing Soon</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Design intuitive user experiences for university applications. Conduct user research and create prototypes.</p>
+                    <div class="skills-label">Required Skills:</div>
+                    <div class="skills-container">
+                        <span class="skill-badge">UI/UX</span>
+                        <span class="skill-badge">Figma</span>
+                        <span class="skill-badge">User Research</span>
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>TalentConnect © 2023 | Connecting talent with opportunity</p>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            Dashboard
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-briefcase"></i>
+            Opportunities
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-file-alt"></i>
+            Applications
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-project-diagram"></i>
+            Projects
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-user"></i>
+            Profile
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Filter functionality
+        function filterOpportunities() {
+            const department = document.getElementById('departmentFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.opportunity-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const cardDept = card.getAttribute('data-department');
+                const cardType = card.getAttribute('data-type');
+                const cardTitle = card.getAttribute('data-title').toLowerCase();
+                const cardSkills = card.getAttribute('data-skills').toLowerCase();
+                
+                const deptMatch = department === 'all' || cardDept === department;
+                const typeMatch = type === 'all' || cardType === type;
+                const searchMatch = search === '' || 
+                                    cardTitle.includes(search) || 
+                                    cardSkills.includes(search);
+                
+                if (deptMatch && typeMatch && searchMatch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show no results message if needed
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                if (!noResults) {
+                    const noResultsHtml = `
+                        <div class="no-results" id="noResults">
+                            <i class="fas fa-search"></i>
+                            <h3>No Opportunities Found</h3>
+                            <p>Try adjusting your filters or search terms to find matching opportunities.</p>
+                        </div>
+                    `;
+                    document.getElementById('opportunitiesGrid').insertAdjacentHTML('beforeend', noResultsHtml);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        }
+        
+        // Set up event listeners
+        document.getElementById('departmentFilter').addEventListener('change', filterOpportunities);
+        document.getElementById('typeFilter').addEventListener('change', filterOpportunities);
+        document.getElementById('searchInput').addEventListener('input', filterOpportunities);
+        
+        // Apply button functionality
+        document.querySelectorAll('.apply-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Applying...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-check me-2"></i> Application Sent!';
+                    this.style.background = 'linear-gradient(135deg, var(--success-color), #28a745)';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                        this.style.background = 'linear-gradient(135deg, var(--primary-color), #5c6bc0)';
+                    }, 2000);
+                }, 1500);
+            });
+        });
+        
+        // Initialize filtering
+        filterOpportunities();
+    </script>
+</body>
+</html>
