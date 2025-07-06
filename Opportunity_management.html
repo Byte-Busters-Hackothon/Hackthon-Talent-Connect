@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+        }
+       
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+       
+        .header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+       
+        .filter-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+       
+        .opportunity-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+       
+        .opportunity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+       
+        .opportunity-type {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+       
+        .opportunity-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+       
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+       
+        .status-closed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+       
+        .status-descharted {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+       
+        .badge-category {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: normal;
+            margin-right: 0.5rem;
+        }
+       
+        .search-box {
+            position: relative;
+        }
+       
+        .search-box i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+       
+        .search-input {
+            padding-left: 40px;
+            border-radius: 50px;
+        }
+       
+        .dropdown-filter {
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+       
+        .dropdown-toggle {
+            background-color: white;
+            border: 1px solid #ced4da;
+            color: #495057;
+            border-radius: 50px;
+            padding: 0.5rem 1.25rem;
+        }
+       
+        .pagination-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+       
+        .action-btn {
+            border-radius: 50px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+        }
+       
+        @media (max-width: 768px) {
+            .dropdown-filter {
+                width: 100%;
+                margin-right: 0;
+            }
+           
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+           
+            .table thead {
+                display: none;
+            }
+           
+            .table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+            }
+           
+            .table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem;
+                border-bottom: 1px solid #dee2e6;
+            }
+           
+            .table td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                color: var(--secondary-color);
+            }
+           
+            .table td:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="mb-0"><i class="fas fa-bullseye me-2"></i>Opportunity Management</h1>
+        </div>
+    </div>
+   
+    <div class="container">
+        <div class="filter-section">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control search-input" placeholder="Search opportunities..." id="searchInput">
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-primary" id="addOpportunityBtn">
+                        <i class="fas fa-plus me-1"></i> Add Opportunity
+                    </button>
+                </div>
+            </div>
+           
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex flex-wrap">
+                        <div class="dropdown dropdown-filter">
+                            <button class="btn dropdown-toggle" type="button" id="typeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-filter me-1"></i> All Types
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="typeDropdown">
+                                <li><a class="dropdown-item active" href="#" data-filter="type" data-value="all">All Types</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-filter="type" data-value="internship">Internship</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="type" data-value="research">Research</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="type" data-value="training">Training</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="type" data-value="enterprise">Enterprise</a></li>
+                            </ul>
+                        </div>
+                       
+                        <div class="dropdown dropdown-filter">
+                            <button class="btn dropdown-toggle" type="button" id="deptDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-building me-1"></i> All Departments
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="deptDropdown">
+                                <li><a class="dropdown-item active" href="#" data-filter="department" data-value="all">All Departments</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-filter="department" data-value="computer science">Computer Science</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="department" data-value="finance">Finance</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="department" data-value="healthcare">Healthcare</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="department" data-value="energy">Energy</a></li>
+                            </ul>
+                        </div>
+                       
+                        <div class="dropdown dropdown-filter">
+                            <button class="btn dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-info-circle me-1"></i> All Status
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                                <li><a class="dropdown-item active" href="#" data-filter="status" data-value="all">All Status</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-filter="status" data-value="active">Active</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="status" data-value="closed">Closed</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="status" data-value="descharted">Descharted</a></li>
+                            </ul>
+                        </div>
+                       
+                        <div class="dropdown dropdown-filter">
+                            <button class="btn dropdown-toggle" type="button" id="deadlineDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-calendar-alt me-1"></i> All Deadlines
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="deadlineDropdown">
+                                <li><a class="dropdown-item active" href="#" data-filter="deadline" data-value="all">All Deadlines</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-filter="deadline" data-value="upcoming">Upcoming</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="deadline" data-value="past">Past</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="deadline" data-value="this-month">This Month</a></li>
+                            </ul>
+                        </div>
+                       
+                        <div class="dropdown dropdown-filter">
+                            <button class="btn dropdown-toggle" type="button" id="orgDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-users me-1"></i> All Organizations
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="orgDropdown">
+                                <li><a class="dropdown-item active" href="#" data-filter="organization" data-value="all">All Organizations</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" data-filter="organization" data-value="techcorp">TechCorp Solutions</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="organization" data-value="edutech">EduTech Academy</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="organization" data-value="finance">Global Finance Institute</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="organization" data-value="healthtech">HealthTech Innovations</a></li>
+                                <li><a class="dropdown-item" href="#" data-filter="organization" data-value="green">Green Energy Corp</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Categories and Levels components -->
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Categories</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap">
+                                <span class="badge badge-category mb-2">Technology</span>
+                                <span class="badge badge-category mb-2">Finance</span>
+                                <span class="badge badge-category mb-2">Healthcare</span>
+                                <span class="badge badge-category mb-2">Energy</span>
+                                <span class="badge badge-category mb-2">Education</span>
+                                <span class="badge badge-category mb-2">Research</span>
+                                <span class="badge badge-category mb-2">Internship</span>
+                                <span class="badge badge-category mb-2">Training</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-layer-group me-2"></i>Levels</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap">
+                                <span class="badge badge-category mb-2">Beginner</span>
+                                <span class="badge badge-category mb-2">Intermediate</span>
+                                <span class="badge badge-category mb-2">Advanced</span>
+                                <span class="badge badge-category mb-2">Undergraduate</span>
+                                <span class="badge badge-category mb-2">Graduate</span>
+                                <span class="badge badge-category mb-2">Professional</span>
+                                <span class="badge badge-category mb-2">Executive</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="table-responsive">
+            <table class="table table-hover" id="opportunitiesTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Department</th>
+                        <th>Posted By</th>
+                        <th>Deadline</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Applications</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-type="internship" data-department="computer science" data-status="active" data-deadline="2024-02-15" data-organization="techcorp">
+                        <td data-label="Title">Software Engineering Internship</td>
+                        <td data-label="Type"><span class="opportunity-type">(Internship)</span></td>
+                        <td data-label="Department">Computer Science</td>
+                        <td data-label="Posted By">TechCorp Solutions<br><small>Sarah Johnson</small></td>
+                        <td data-label="Deadline">2024-02-15</td>
+                        <td data-label="Duration">12 weeks</td>
+                        <td data-label="Status"><span class="opportunity-status status-active">Active</span></td>
+                        <td data-label="Applications">45 applications</td>
+                        <td data-label="Actions">
+                            <button class="btn btn-sm btn-outline-primary action-btn me-1"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-success action-btn"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    <tr data-type="research" data-department="computer science" data-status="active" data-deadline="2024-01-30" data-organization="edutech">
+                        <td data-label="Title">AI Research Project OPP002</td>
+                        <td data-label="Type"><span class="opportunity-type">(Research)</span></td>
+                        <td data-label="Department">Computer Science</td>
+                        <td data-label="Posted By">EduTech Academy<br><small>Prof. David Kim</small></td>
+                        <td data-label="Deadline">2024-01-30</td>
+                        <td data-label="Duration">6 months</td>
+                        <td data-label="Status"><span class="opportunity-status status-active">Active</span></td>
+                        <td data-label="Applications">23 applications</td>
+                        <td data-label="Actions">
+                            <button class="btn btn-sm btn-outline-primary action-btn me-1"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-success action-btn"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    <tr data-type="training" data-department="finance" data-status="closed" data-deadline="2024-01-25" data-organization="finance">
+                        <td data-label="Title">Financial Analysis Training OPP003</td>
+                        <td data-label="Type"><span class="opportunity-type">(Training)</span></td>
+                        <td data-label="Department">Finance</td>
+                        <td data-label="Posted By">Global Finance Institute<br><small>Michael Chen</small></td>
+                        <td data-label="Deadline">2024-01-25</td>
+                        <td data-label="Duration">8 weeks</td>
+                        <td data-label="Status"><span class="opportunity-status status-closed">Closed</span></td>
+                        <td data-label="Applications">67 applications</td>
+                        <td data-label="Actions">
+                            <button class="btn btn-sm btn-outline-primary action-btn me-1"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-success action-btn"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    <tr data-type="research" data-department="healthcare" data-status="active" data-deadline="2024-02-20" data-organization="healthtech">
+                        <td data-label="Title">Healthcare Innovation Lab OPP004</td>
+                        <td data-label="Type"><span class="opportunity-type">(Research)</span></td>
+                        <td data-label="Department">Healthcare</td>
+                        <td data-label="Posted By">HealthTech Innovations<br><small>Dr. Emily Rodriguez</small></td>
+                        <td data-label="Deadline">2024-02-20</td>
+                        <td data-label="Duration">4 months</td>
+                        <td data-label="Status"><span class="opportunity-status status-active">Active</span></td>
+                        <td data-label="Applications">34 applications</td>
+                        <td data-label="Actions">
+                            <button class="btn btn-sm btn-outline-primary action-btn me-1"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-success action-btn"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    <tr data-type="enterprise" data-department="energy" data-status="descharted" data-deadline="2024-02-10" data-organization="green">
+                        <td data-label="Title">Renewable Energy Internship OPP005</td>
+                        <td data-label="Type"><span class="opportunity-type">(Enterprise)</span></td>
+                        <td data-label="Department">Energy</td>
+                        <td data-label="Posted By">Green Energy Corp<br><small>Lisa Thompson</small></td>
+                        <td data-label="Deadline">2024-02-10</td>
+                        <td data-label="Duration">10 weeks</td>
+                        <td data-label="Status"><span class="opportunity-status status-descharted">Descharted</span></td>
+                        <td data-label="Applications">12 applications</td>
+                        <td data-label="Actions">
+                            <button class="btn btn-sm btn-outline-primary action-btn me-1"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-success action-btn"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+       
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="pagination-info">
+                Showing <span id="showingCount">5</span> of <span id="totalCount">5</span> opportunities
+            </div>
+            <div>
+                <nav aria-label="Opportunity pagination">
+                    <ul class="pagination pagination-sm">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.dropdown-item[data-filter]');
+            const searchInput = document.getElementById('searchInput');
+            const opportunitiesTable = document.getElementById('opportunitiesTable');
+            const rows = opportunitiesTable.querySelectorAll('tbody tr');
+           
+            // Current filters
+            let filters = {
+                type: 'all',
+                department: 'all',
+                status: 'all',
+                deadline: 'all',
+                organization: 'all',
+                search: ''
+            };
+           
+            // Apply filters
+            function applyFilters() {
+                let visibleCount = 0;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+               
+                rows.forEach(row => {
+                    const type = row.getAttribute('data-type');
+                    const department = row.getAttribute('data-department');
+                    const status = row.getAttribute('data-status');
+                    const deadline = new Date(row.getAttribute('data-deadline'));
+                    const organization = row.getAttribute('data-organization');
+                    const title = row.querySelector('td[data-label="Title"]').textContent.toLowerCase();
+                   
+                    // Check type filter
+                    const typeMatch = filters.type === 'all' || type === filters.type;
+                   
+                    // Check department filter
+                    const deptMatch = filters.department === 'all' || department === filters.department;
+                   
+                    // Check status filter
+                    const statusMatch = filters.status === 'all' || status === filters.status;
+                   
+                    // Check organization filter
+                    const orgMatch = filters.organization === 'all' || organization === filters.organization;
+                   
+                    // Check deadline filter
+                    let deadlineMatch = true;
+                    if (filters.deadline === 'upcoming') {
+                        deadlineMatch = deadline >= today;
+                    } else if (filters.deadline === 'past') {
+                        deadlineMatch = deadline < today;
+                    } else if (filters.deadline === 'this-month') {
+                        const thisMonth = today.getMonth();
+                        const thisYear = today.getFullYear();
+                        deadlineMatch = deadline.getMonth() === thisMonth &&
+                                       deadline.getFullYear() === thisYear;
+                    }
+                   
+                    // Check search filter
+                    const searchMatch = filters.search === '' ||
+                                       title.includes(filters.search.toLowerCase());
+                   
+                    // Show/hide row based on filters
+                    if (typeMatch && deptMatch && statusMatch && deadlineMatch && orgMatch && searchMatch) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+               
+                // Update showing count
+                document.getElementById('showingCount').textContent = visibleCount;
+            }
+           
+            // Filter button click handler
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                   
+                    // Remove active class from siblings
+                    const parentList = this.parentNode.parentNode;
+                    parentList.querySelectorAll('.dropdown-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                   
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                   
+                    // Update dropdown button text
+                    const dropdownToggle = parentList.previousElementSibling;
+                    const icon = dropdownToggle.querySelector('i');
+                    dropdownToggle.innerHTML = icon.outerHTML + ' ' + this.textContent;
+                   
+                    // Update filters
+                    const filterType = this.getAttribute('data-filter');
+                    const filterValue = this.getAttribute('data-value');
+                    filters[filterType] = filterValue;
+                   
+                    // Apply filters
+                    applyFilters();
+                });
+            });
+           
+            // Search input handler
+            searchInput.addEventListener('input', function() {
+                filters.search = this.value.trim();
+                applyFilters();
+            });
+           
+            // Add opportunity button handler
+            document.getElementById('addOpportunityBtn').addEventListener('click', function() {
+                alert('Add new opportunity functionality would go here.');
+            });
+           
+            // Initialize showing count
+            document.getElementById('totalCount').textContent = rows.length;
+        });
+    </script>
+</body>
+</html>
